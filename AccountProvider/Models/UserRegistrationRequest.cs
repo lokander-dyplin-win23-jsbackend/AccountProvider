@@ -1,6 +1,6 @@
 ﻿namespace AccountProvider.Models;
 
-internal class UserRegistrationRequest
+public class UserRegistrationRequest
 {
     public string? FirstName { get; set; }
     public string? LastName { get; set;}
