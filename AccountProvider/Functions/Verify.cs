@@ -43,7 +43,7 @@ namespace AccountProvider.Functions
 
                 if (vr != null && !string.IsNullOrEmpty(vr.Email) && !string.IsNullOrEmpty(vr.VerficationCode))
                 {
-                    //Verify code using verifactionprovider
+                    
                     var isVerified = true;
                     if (isVerified)
                     {

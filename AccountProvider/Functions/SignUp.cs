@@ -7,6 +7,7 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System.Text;
 
 namespace AccountProvider.Functions
 {
@@ -55,8 +56,23 @@ namespace AccountProvider.Functions
                             var result = await _userManager.CreateAsync(userAccount, urr.Password);
                             if (result.Succeeded)
                             {
+                                /* 1:16:03*/
+                                try
+                                {
+                                    using var http = new HttpClient();
+                                    StringContent content = new StringContent(JsonConvert.SerializeObject  (new { Email = userAccount.Email }), Encoding.UTF8, "application/json");
+                                    var respone = await http.PostAsync("https://verificationprovider.silicon.azurewebsite.net/api/generate", content);
+
+                                }
+                                catch (Exception ex)
+                                {
+
+                                    _logger.LogError($"http.PostAsync :: {ex.Message}");
+                                }
+                                
+                                 
                                 return new OkResult();
-                            }
+                            } 
 
                         }
                         catch (Exception ex)
