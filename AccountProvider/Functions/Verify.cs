@@ -1,11 +1,12 @@
 using AccountProvider.Models;
 using Data.Entities;
-using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+
 
 namespace AccountProvider.Functions
 {
@@ -13,6 +14,7 @@ namespace AccountProvider.Functions
     {
         private readonly ILogger<Verify> _logger = logger;
         private readonly UserManager<UserAccount> _userManager = userManager;
+
 
         [Function("Verify")]
         public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequest req)
