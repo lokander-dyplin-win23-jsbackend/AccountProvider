@@ -6,6 +6,7 @@ public class UserAccount : IdentityUser
 {
     public string? FirstName { get; set; }
     public string? LastName { get; set;}
+    public string ProfileImage { get; set; } = null!;
 
     public string? AddressId { get; set; }
 
