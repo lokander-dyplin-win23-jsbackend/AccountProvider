@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System.Text;
 
 
 namespace AccountProvider.Functions
@@ -43,22 +44,38 @@ namespace AccountProvider.Functions
 
                 if (vr != null && !string.IsNullOrEmpty(vr.Email) && !string.IsNullOrEmpty(vr.VerficationCode))
                 {
-                    
-                    var isVerified = true;
-                    if (isVerified)
+                    try
                     {
-                        var userAccount = await _userManager.FindByEmailAsync(vr.Email);
-                        if (userAccount != null)
-                        {
-                            userAccount.EmailConfirmed = true;
-                            await _userManager.UpdateAsync(userAccount);
+                        //när allt är på plats ta bort kommentaren så den är aktiv och ta bort true skriv istället (response.IsSuccessStatusCode)
+                        using var http = new HttpClient();
+                        StringContent content = new StringContent(JsonConvert.SerializeObject(vr), Encoding.UTF8, "application/json");
+                        //var response = await http.PostAsync("https://verificationprovider.silicon.azurewebsite.net/api/verify", content);
 
-                            if (await _userManager.IsEmailConfirmedAsync(userAccount))
+                        if (true)
+                        {
+                            var userAccount = await _userManager.FindByEmailAsync(vr.Email);
+                            if (userAccount != null)
                             {
-                                return new OkResult();
+                                userAccount.EmailConfirmed = true;
+                                await _userManager.UpdateAsync(userAccount);
+
+                                if (await _userManager.IsEmailConfirmedAsync(userAccount))
+                                {
+                                    return new OkResult();
+                                }
                             }
                         }
+
                     }
+                    catch (Exception ex)
+                    {
+
+                        _logger.LogError($"http.PostAsync :: {ex.Message}");
+                    }
+
+
+
+                   
                 }
             }
 
