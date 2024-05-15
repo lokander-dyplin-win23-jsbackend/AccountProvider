@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace Data.Contexts;
 
-internal class DataContextFactory : IDesignTimeDbContextFactory<DataContext>
+public class DataContextFactory : IDesignTimeDbContextFactory<DataContext>
 {
     public DataContext CreateDbContext(string[] args)
     {
