@@ -1,4 +1,5 @@
 using AccountProvider.Models;
+using Azure;
 using Data.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -49,9 +50,9 @@ namespace AccountProvider.Functions
                         //när allt är på plats ta bort kommentaren så den är aktiv och ta bort true skriv istället (response.IsSuccessStatusCode)
                         using var http = new HttpClient();
                         StringContent content = new StringContent(JsonConvert.SerializeObject(vr), Encoding.UTF8, "application/json");
-                        //var response = await http.PostAsync("https://verificationprovider.silicon.azurewebsite.net/api/verify", content);
+                        var response = await http.PostAsync("https://verificationprovider-silicon-lokdyp.azurewebsites.net/api/verify?code=_CTGW87fpEbpcDbbuFGeHGL3WXFDc5g4M22q1RUVWkPLAzFumu1Gyw%3D%3D", content);
 
-                        if (true)
+                        if (true || response.IsSuccessStatusCode)
                         {
                             var userAccount = await _userManager.FindByEmailAsync(vr.Email);
                             if (userAccount != null)
@@ -72,10 +73,6 @@ namespace AccountProvider.Functions
 
                         _logger.LogError($"http.PostAsync :: {ex.Message}");
                     }
-
-
-
-                   
                 }
             }
 

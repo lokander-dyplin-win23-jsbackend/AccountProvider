@@ -61,7 +61,7 @@ namespace AccountProvider.Functions
                                 {
                                     using var http = new HttpClient();
                                     StringContent content = new StringContent(JsonConvert.SerializeObject  (new { Email = userAccount.Email }), Encoding.UTF8, "application/json");
-                                    var response = await http.PostAsync("https://verificationprovider.silicon.azurewebsite.net/api/generate", content);
+                                    var response = await http.PostAsync("https://verificationprovider-silicon-lokdyp.azurewebsites.net/api/verify?code=_CTGW87fpEbpcDbbuFGeHGL3WXFDc5g4M22q1RUVWkPLAzFumu1Gyw%3D%3D", content);
 
                                 }
                                 catch (Exception ex)
