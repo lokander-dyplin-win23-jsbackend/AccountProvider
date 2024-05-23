@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System.Text;
 
 namespace AccountProvider.Functions
 {
@@ -48,12 +49,33 @@ namespace AccountProvider.Functions
                         var result = await _signInManager.CheckPasswordSignInAsync(userAccount!, ulr.Password, false);
                         if (result.Succeeded)
                         {
+                            if (userAccount!.Email != null && userAccount.Id != null)
+                            {
+                                TokenRequest trm = new TokenRequest
+                                {
+                                    Email = userAccount.Email!,
+                                    UserId = userAccount.Id,
+                                };
 
-                            // Get token from token Tokenprovider
-                            return new OkObjectResult("accessToken");
+                                try
+                                {
+                                    trm = JsonConvert.DeserializeObject<TokenRequest>(body)!;
+                                }
+
+                                catch (Exception ex)
+                                {
+                                    _logger.LogError($"JsonConvert TRM :: {ex.Message}");
+                                }
+
+
+                                using var http = new HttpClient();
+                                StringContent content = new StringContent(JsonConvert.SerializeObject(trm), Encoding.UTF8, "application/json");
+                                var response = await http.PostAsync("https://tokenprovider-silicons.azurewebsites.net/api/token/generate?code=wuBVxONg8p6LBOAPV_MQ8E2Q4YpHZ1yZqBai51eSCNEAAzFut47-Uw%3D%3D", content);
+                                return new OkObjectResult("accessToken");
+                            }
+
+                            return new UnauthorizedResult();
                         }
-
-                        return new UnauthorizedResult();
                     }
                     catch (Exception ex)
                     {
