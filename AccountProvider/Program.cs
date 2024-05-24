@@ -18,7 +18,7 @@ var host = new HostBuilder()
 
         services.AddDefaultIdentity<UserAccount>(x =>
         {
-            x.SignIn.RequireConfirmedAccount = false;
+            x.SignIn.RequireConfirmedAccount = true;
             x.User.RequireUniqueEmail = true;
             x.Password.RequiredLength = 8;
         }).AddEntityFrameworkStores<DataContext>();
