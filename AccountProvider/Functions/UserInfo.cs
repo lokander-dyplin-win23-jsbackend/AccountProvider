@@ -21,7 +21,7 @@ public class UserInfo
     {
         _logger.LogInformation("C# HTTP trigger function processed a request.");
 
-        // Får den inloggade användaren
+        // Get the currently logged-in user
         var user = await _userManager.GetUserAsync(req.HttpContext.User);
 
         if (user == null)
@@ -29,7 +29,7 @@ public class UserInfo
             return new UnauthorizedResult();
         }
 
-        // skapar ett användare objekt som vi sedan kan mappa till account
+        // Construct the user info object
         var userInfo = new
         {
             FirstName = user.FirstName,
@@ -37,6 +37,10 @@ public class UserInfo
             Email = user.Email,
         };
 
-        return new OkObjectResult(userInfo);
+        // Return the user info as JSON
+        return new JsonResult(userInfo)
+        {
+            StatusCode = StatusCodes.Status200OK
+        };
     }
 }
